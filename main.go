@@ -3,32 +3,49 @@ package main
 import (
 	"fmt"
 
-	Collections "github.com/Fingann/Go-Collections/collections"
+	List "github.com/Fingann/Go-Collections/collections/list"
+	Queue "github.com/Fingann/Go-Collections/collections/queue"
 )
 
 func main() {
 	// Create a new List and retrieve values
-	lst := Collections.NewList([]string{"hello,", " world"})
-	val, _ := lst.Get(0)
-	fmt.Print(val)
-	val, _ = lst.Get(1)
-	fmt.Print(val)
+	list1 := List.From([]string{"hello,", " lists"})
+	val, _ := list1.Get(0)
+	fmt.Print(val) // "hello,"
+	val, _ = list1.Get(1)
+	fmt.Println(val) // " lists"
 
-	// Add ranges to list
-	lst2 := Collections.NewList([]string{"!", "!"})
-	lst.AddRange(lst2)
-	val, _ = lst.Get(2)
-	fmt.Println(val)
+	// Create a new List
+	list2 := List.New[string]()
+	list2.Add("!")
 
+	// Add list2 to list 1
+	list1.AddRange(list2)
+	fmt.Println("Added secound list to first list")
+
+	fmt.Println("Looping and printing list using foreach:")
+	// loop the list and print the values
+	list1.ForEach(func(item string) { fmt.Printf(item) }) // "Hello, lists!"
+
+	fmt.Println("\nSearching List for \"Hello,\"")
 	// Search for values within lists using predicate
-	item, err := lst.Find(func(needle string) bool {
+	item, _ := list1.Find(func(needle string) bool {
 		return needle == "hello,"
 	})
-	if err != nil {
-		fmt.Errorf("error: %s", err)
-	}
-	fmt.Printf("Found string: \"%s\", in the list \n", item)
+	fmt.Printf("Found string: \"%s\"\n", item)
 
-	lst.ForEach(func(item string) { fmt.Printf(item) })
+	///////// Queue ////////////
+
+	queue := Queue.New[string]()
+	queue.Enqueue("queue")
+	queue.Enqueue("hello")
+
+	front, _ := queue.Peek()
+	fmt.Printf("Queue Peek: %s\n", front) // "hello"
+
+	val, _ = queue.Dequeue()
+	fmt.Println("Queue Dequeue: ", val) // "hello"
+	val, _ = queue.Dequeue()
+	fmt.Println("Queue Dequeue: ", val) // "queue"
 
 }
