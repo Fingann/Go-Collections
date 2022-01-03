@@ -4,7 +4,7 @@ import (
 	"errors"
 	"sync"
 
-	Collections "github.com/Fingann/Go-Collections/collections"
+	"github.com/Fingann/Go-Collections"
 )
 
 var QueueEmptyExcepition = errors.New("Queue is empty")

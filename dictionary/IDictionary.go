@@ -1,9 +1,10 @@
 package dictionary
 
 import (
-	Collections "github.com/Fingann/Go-Collections/collections"
+	"github.com/Fingann/Go-Collections"
 )
 
+// IDictionary[TKey, TValue] is the interface that represents a generic dictionary.
 type IDictionary[TKey comparable, TValue any] interface {
 	Collections.ICollection[KeyValuePair[TKey, TValue]]
 	AddKeyValue(key TKey, value TValue) error

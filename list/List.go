@@ -2,7 +2,8 @@ package list
 
 import (
 	"errors"
-	Collections "github.com/Fingann/Go-Collections/collections"
+	"github.com/Fingann/Go-Collections"
+	"sync"
 
 	"github.com/Fingann/Go-Collections/internal"
 )
@@ -12,18 +13,21 @@ var IndexOutOfRangeException = errors.New("Index was out of range")
 type List[T comparable] struct {
 	Collections.ICollection[T]
 	IList[T]
-	items []T
+	items    []T
+	syncRoot *sync.Mutex
 }
 
 func From[T comparable](list []T) *List[T] {
 	return &List[T]{
-		items: list,
+		items:    list,
+		syncRoot: &sync.Mutex{},
 	}
 }
 
 func New[T comparable]() *List[T] {
 	return &List[T]{
-		items: make([]T, 0),
+		items:    make([]T, 0),
+		syncRoot: &sync.Mutex{},
 	}
 }
 

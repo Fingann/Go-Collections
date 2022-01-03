@@ -1,5 +1,6 @@
 package Collections
 
+// IEnumerable[T] is an interface that defines a method for retreiving an Enumerator for a given collection
 type IEnumerable[T any] interface {
 	GetEnumerator() IEnumerator[T]
 }

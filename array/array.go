@@ -2,7 +2,7 @@ package Collections
 
 import (
 	"errors"
-	Collections "github.com/Fingann/Go-Collections/collections"
+	"github.com/Fingann/Go-Collections"
 	"reflect"
 )
 

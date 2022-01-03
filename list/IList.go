@@ -1,9 +1,10 @@
 package list
 
 import (
-	Collections "github.com/Fingann/Go-Collections/collections"
+	"github.com/Fingann/Go-Collections"
 )
 
+// IList[T] is the interface that represents a generic list.
 type IList[T any] interface {
 	Collections.ICollection[T]
 	IsFixedSize() bool

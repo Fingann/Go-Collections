@@ -4,7 +4,7 @@ import (
 	"errors"
 	"sync"
 
-	Collections "github.com/Fingann/Go-Collections/collections"
+	Collections "github.com/Fingann/Go-Collections"
 )
 
 var StackEmptyExcepition = errors.New("Stack is empty")

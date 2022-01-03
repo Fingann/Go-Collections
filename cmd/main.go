@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 
-	dict "github.com/Fingann/Go-Collections/collections/dictionary"
-	List "github.com/Fingann/Go-Collections/collections/list"
-	Queue "github.com/Fingann/Go-Collections/collections/queue"
+	dict "github.com/Fingann/Go-Collections/dictionary"
+	List "github.com/Fingann/Go-Collections/list"
+	Queue "github.com/Fingann/Go-Collections/queue"
 )
 
 type Point struct {

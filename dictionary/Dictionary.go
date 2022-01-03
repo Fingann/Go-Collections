@@ -4,13 +4,14 @@ import (
 	"errors"
 	"sync"
 
-	Collections "github.com/Fingann/Go-Collections/collections"
-	Array "github.com/Fingann/Go-Collections/collections/array"
+	"github.com/Fingann/Go-Collections"
+	Array "github.com/Fingann/Go-Collections/array"
 )
 
 var KeyExistsException = errors.New("An element with the same key already exists in the Dictionary")
 var KeyNotFoundException = errors.New("Key does not exists in the Dictionary")
 
+// Dictionary represents a map of key-value pairs.
 type Dictionary[TKey comparable, TValue any] struct {
 	Collections.ICollection[KeyValuePair[TKey, TValue]]
 	IDictionary[TKey, TValue]
