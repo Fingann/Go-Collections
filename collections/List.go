@@ -145,3 +145,14 @@ func (l *List[T]) Find(predicate internal.Predicate[T]) (T, error) {
 		}
 	}
 }
+
+func (l *List[T]) ForEach(action internal.Action[T]) error {
+	enumerator := l.GetEnumerator()
+	for {
+		action(enumerator.Current())
+
+		if !enumerator.MoveNext() {
+			return errors.New("Could not find item in collection")
+		}
+	}
+}

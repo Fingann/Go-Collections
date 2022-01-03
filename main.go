@@ -29,4 +29,6 @@ func main() {
 	}
 	fmt.Printf("Found string: \"%s\", in the list \n", item)
 
+	lst.ForEach(func(item string) { fmt.Printf(item) })
+
 }
