@@ -17,4 +17,12 @@ func main() {
 	val, _ = lst.Get(2)
 	fmt.Println(val)
 
+	item, err := lst.Find(func(needle string) bool {
+		return needle == "hello,"
+	})
+	if err != nil {
+		fmt.Errorf("error: %s", err)
+	}
+	fmt.Printf("Found string: \"%s\", in the list \n", item)
+
 }

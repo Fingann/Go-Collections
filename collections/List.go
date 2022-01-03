@@ -3,6 +3,8 @@ package Collections
 import (
 	"errors"
 	"sync"
+
+	"github.com/Fingann/Go-Collections/internal"
 )
 
 type IList[T any] interface {
@@ -77,6 +79,18 @@ func (l *List[T]) Add(value T) (int, error) {
 	return len(l.items), nil
 
 }
+
+func (l *List[T]) AddRange(collection IEnumerable[T]) error {
+	enumerator := collection.GetEnumerator()
+	for {
+		l.items = append(l.items, enumerator.Current())
+		if !enumerator.MoveNext() {
+			break
+		}
+	}
+	return nil
+}
+
 func (l *List[T]) Clear() error {
 	l.items = l.items[:0]
 	return nil
@@ -119,11 +133,15 @@ func (l *List[T]) RemoveAt(index int) error {
 
 }
 
-func (l *List[T]) AddRange(collection IEnumerable[T]) error {
-	enumerator := collection.GetEnumerator()
-	l.items = append(l.items, enumerator.Current())
-	for enumerator.MoveNext() {
+func (l *List[T]) Find(predicate internal.Predicate[T]) (T, error) {
+	enumerator := l.GetEnumerator()
+	for {
+		if predicate(enumerator.Current()) {
+			return enumerator.Current(), nil
+		}
 		l.items = append(l.items, enumerator.Current())
+		if !enumerator.MoveNext() {
+			return *new(T), errors.New("Could not find item in collection")
+		}
 	}
-	return nil
 }
