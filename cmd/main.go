@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 
-	dict "github.com/Fingann/Go-Collections/dictionary"
-	List "github.com/Fingann/Go-Collections/list"
-	Queue "github.com/Fingann/Go-Collections/queue"
+	"github.com/Fingann/Go-Collections/dictionary"
+	"github.com/Fingann/Go-Collections/list"
+	"github.com/Fingann/Go-Collections/queue"
 )
 
 type Point struct {
@@ -22,17 +22,25 @@ func (p *Point) String() string {
 }
 
 func main() {
+	list.From([]*Point{NewPoint(1, 2), NewPoint(3, 4), NewPoint(5, 6)}).
+		ForEach(func(p *Point) {
+			fmt.Println(p)
+		})
+
 	fmt.Println("Lists: ")
 
 	// Create a new List and retrieve values
-	list1 := List.From([]string{"hello,", " lists"})
+	list1 := list.From([]string{"hello,"})
+	list1.Add(" world")
 	val, _ := list1.Get(0)
 	fmt.Print(val) // "hello,"
 	val, _ = list1.Get(1)
 	fmt.Println(val) // " lists"
+	val, _ = list1.Get(1)
+	fmt.Println(val) // "world"
 
 	// Create a new List
-	list2 := List.New[string]()
+	list2 := list.New[string]()
 	list2.Add("!")
 
 	// Add list2 to list 1
@@ -53,7 +61,7 @@ func main() {
 	///////// Queue ////////////
 	fmt.Println("\nQueue:")
 
-	queue := Queue.New[string]()
+	queue := queue.New[string]()
 	queue.Enqueue("hello")
 	queue.Enqueue("queue")
 
@@ -68,7 +76,7 @@ func main() {
 	///////// Dictionary ////////////
 
 	fmt.Println("\nDictionary:")
-	dict := dict.New[string, *Point]()
+	dict := dictionary.New[string, *Point]()
 	dict.AddKeyValue("key1", NewPoint(1, 2))
 	dict.AddKeyValue("key2", NewPoint(3, 4))
 

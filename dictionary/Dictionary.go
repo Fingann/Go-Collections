@@ -5,7 +5,7 @@ import (
 	"sync"
 
 	"github.com/Fingann/Go-Collections"
-	Array "github.com/Fingann/Go-Collections/array"
+	"github.com/Fingann/Go-Collections/list"
 )
 
 var KeyExistsException = errors.New("An element with the same key already exists in the Dictionary")
@@ -34,10 +34,10 @@ func New[TKey comparable, TValue any]() *Dictionary[TKey, TValue] {
 }
 
 // GetEnumerator returns an enumerator that iterates through the List[T]
-func (d *Dictionary[TKey, TValue]) GetEnumerator() Collections.IEnumerator[*KeyValuePair[TKey, TValue]] {
-	list := make(Array.Array[*KeyValuePair[TKey, TValue]], 0)
+func (d *Dictionary[TKey, TValue]) GetEnumerator() Collections.IEnumerator[KeyValuePair[TKey, TValue]] {
+	list := make([]KeyValuePair[TKey, TValue], 0, len(d.dict))
 	for key, value := range d.dict {
-		list.Add(NewKeyValuePair(key, value))
+		list = append(list, KeyValuePair[TKey, TValue]{key, value})
 	}
 	return Collections.Enumerator(list)
 
@@ -92,18 +92,18 @@ func (d *Dictionary[TKey, TValue]) Get(key TKey) (TValue, error) {
 }
 
 func (d *Dictionary[TKey, TValue]) Keys() Collections.ICollection[TKey] {
-	list := Array.New[TKey]()
+	keys := make([]TKey, 0, len(d.dict))
 	for key, _ := range d.dict {
-		list.Add(key)
+		keys = append(keys, key)
 	}
-	return list
+	return list.From(keys)
 
 }
 
 func (d *Dictionary[TKey, TValue]) Values() Collections.ICollection[TValue] {
-	list := Array.New[TValue]()
+	values := make([]TValue, 0, len(d.dict))
 	for _, value := range d.dict {
-		list.Add(value)
+		values = append(values, value)
 	}
-	return list
+	return list.From(values)
 }
