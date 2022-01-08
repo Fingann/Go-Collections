@@ -66,9 +66,9 @@ func (l *List[T]) GetRange(index int, count int) (*List[T], error) {
 	return From[T](l.items[index : index+count]), nil
 }
 
-func (l *List[T]) Add(value T) (int, error) {
+func (l *List[T]) Add(value T) error {
 	l.items = append(l.items, value)
-	return len(l.items), nil
+	return nil
 }
 
 func (l *List[T]) Set(index int, value T) error {
@@ -159,7 +159,6 @@ func (l *List[T]) ForEach(action internal.Action[T]) error {
 		action(v)
 	}
 	return nil
-
 }
 
 func (l *List[T]) Count() int {

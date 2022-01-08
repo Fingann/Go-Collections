@@ -5,6 +5,7 @@ import (
 	"sync"
 
 	"github.com/Fingann/Go-Collections"
+	"github.com/Fingann/Go-Collections/internal"
 	"github.com/Fingann/Go-Collections/list"
 )
 
@@ -19,6 +20,7 @@ type Dictionary[TKey comparable, TValue any] struct {
 	syncRoot *sync.Mutex
 }
 
+// From creates a new Dictionary[TKey, TValue] from a map[TKey]TValue.
 func From[TKey comparable, TValue any](dict map[TKey]TValue) *Dictionary[TKey, TValue] {
 	return &Dictionary[TKey, TValue]{
 		dict:     dict,
@@ -48,6 +50,8 @@ func (d *Dictionary[TKey, TValue]) SyncRoot() *sync.Mutex {
 	return d.syncRoot
 
 }
+
+// Add adds a key-value pair to the Dictionary[TKey, TValue].
 func (d *Dictionary[TKey, TValue]) Add(pair KeyValuePair[TKey, TValue]) error {
 	_, ok := d.dict[pair.Key()]
 	if ok {
@@ -57,6 +61,7 @@ func (d *Dictionary[TKey, TValue]) Add(pair KeyValuePair[TKey, TValue]) error {
 	return nil
 }
 
+// AddKeyValue adds a key-value pair to the Dictionary[TKey, TValue].
 func (d *Dictionary[TKey, TValue]) AddKeyValue(key TKey, value TValue) error {
 	_, ok := d.dict[key]
 	if ok {
@@ -66,12 +71,15 @@ func (d *Dictionary[TKey, TValue]) AddKeyValue(key TKey, value TValue) error {
 	return nil
 }
 
+// ContainsKey checks if the Dictionary[TKey, TValue] contains a key.
 func (d *Dictionary[TKey, TValue]) ContainsKey(key TKey) bool {
 	_, ok := d.dict[key]
 	return ok
 
 }
 
+// Remove removes a key-value pair from the Dictionary[TKey, TValue].
+// It returns true if the key-value pair is successfully removed; otherwise, false.
 func (d *Dictionary[TKey, TValue]) Remove(key TKey) (bool, error) {
 	_, ok := d.dict[key]
 	if !ok {
@@ -82,6 +90,8 @@ func (d *Dictionary[TKey, TValue]) Remove(key TKey) (bool, error) {
 
 }
 
+// Get returns the value for a key.
+// It returns the value, or an error if the key is not found.
 func (d *Dictionary[TKey, TValue]) Get(key TKey) (TValue, error) {
 	value, ok := d.dict[key]
 	if !ok {
@@ -91,6 +101,7 @@ func (d *Dictionary[TKey, TValue]) Get(key TKey) (TValue, error) {
 
 }
 
+// Keys returns a collection of keys in the Dictionary[TKey, TValue].
 func (d *Dictionary[TKey, TValue]) Keys() Collections.ICollection[TKey] {
 	keys := make([]TKey, 0, len(d.dict))
 	for key, _ := range d.dict {
@@ -100,10 +111,19 @@ func (d *Dictionary[TKey, TValue]) Keys() Collections.ICollection[TKey] {
 
 }
 
+// Values returns a collection of values in the Dictionary[TKey, TValue].
 func (d *Dictionary[TKey, TValue]) Values() Collections.ICollection[TValue] {
 	values := make([]TValue, 0, len(d.dict))
 	for _, value := range d.dict {
 		values = append(values, value)
 	}
 	return list.From(values)
+}
+
+// Foreach calls the specified action for each key-value pair in the Dictionary[TKey, TValue].
+func (l *Dictionary[TKey, TValue]) ForEach(action internal.Action[KeyValuePair[TKey, TValue]]) error {
+	for k, v := range l.dict {
+		action(KeyValuePair[TKey, TValue]{k, v})
+	}
+	return nil
 }

@@ -36,8 +36,6 @@ func main() {
 	fmt.Print(val) // "hello,"
 	val, _ = list1.Get(1)
 	fmt.Println(val) // " lists"
-	val, _ = list1.Get(1)
-	fmt.Println(val) // "world"
 
 	// Create a new List
 	list2 := list.New[string]()
