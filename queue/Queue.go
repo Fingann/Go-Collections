@@ -11,7 +11,7 @@ var QueueEmptyExcepition = errors.New("Queue is empty")
 
 // Queue is a first-in, first-out collection of objects.
 type Queue[T comparable] struct {
-	Collections.Collection[T]
+	collection.Collection[T]
 	items    []T
 	syncRoot *sync.Mutex
 }

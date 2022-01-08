@@ -4,7 +4,6 @@ import (
 	"errors"
 	"sync"
 
-	"github.com/Fingann/Go-Collections"
 	"github.com/Fingann/Go-Collections/enumerate"
 	"github.com/Fingann/Go-Collections/internal"
 	"github.com/Fingann/Go-Collections/list"
@@ -103,7 +102,7 @@ func (d *Dictionary[TKey, TValue]) Get(key TKey) (TValue, error) {
 }
 
 // Keys returns a collection of keys in the Dictionary[TKey, TValue].
-func (d *Dictionary[TKey, TValue]) Keys() Collections.ReadableCollection[TKey] {
+func (d *Dictionary[TKey, TValue]) Keys() *list.List[TKey] {
 	keys := make([]TKey, 0, len(d.dict))
 	for key, _ := range d.dict {
 		keys = append(keys, key)
@@ -113,7 +112,7 @@ func (d *Dictionary[TKey, TValue]) Keys() Collections.ReadableCollection[TKey] {
 }
 
 // Values returns a collection of values in the Dictionary[TKey, TValue].
-func (d *Dictionary[TKey, TValue]) Values() Collections.ReadableCollection[TValue] {
+func (d *Dictionary[TKey, TValue]) Values() *list.List[TValue] {
 	values := make([]TValue, 0, len(d.dict))
 	for _, value := range d.dict {
 		values = append(values, value)
