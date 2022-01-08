@@ -6,7 +6,7 @@ import (
 
 // IList[T] is the interface that represents a generic list.
 type IList[T any] interface {
-	Collections.ICollection[T]
+	Collections.Collection[T]
 	IsFixedSize() bool
 	IsReadOnly() bool
 	IndexOf(value T) (int, error)

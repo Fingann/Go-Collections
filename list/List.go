@@ -5,14 +5,13 @@ import (
 	"reflect"
 	"sync"
 
-	Collections "github.com/Fingann/Go-Collections"
+	"github.com/Fingann/Go-Collections/enumerate"
 	"github.com/Fingann/Go-Collections/internal"
 )
 
 var IndexOutOfRangeException = errors.New("Index was out of range")
 
 type List[T any] struct {
-	Collections.ICollection[T]
 	IList[T]
 	items    []T
 	syncRoot *sync.Mutex
@@ -37,8 +36,8 @@ func WithLengthCapacity[T any](length int, capacity int) *List[T] {
 }
 
 // GetEnumerator returns an enumerator that iterates through the List[T]
-func (l *List[T]) GetEnumerator() Collections.IEnumerator[T] {
-	return Collections.Enumerator(l.items)
+func (l *List[T]) GetEnumerator() *enumerate.Enumerator[T] {
+	return enumerate.NewEnumertor(enumerate.SliceEnumerator(l.items))
 
 }
 
@@ -63,7 +62,7 @@ func (l *List[T]) GetRange(index int, count int) (*List[T], error) {
 		return new(List[T]), IndexOutOfRangeException
 	}
 
-	return From[T](l.items[index : index+count]), nil
+	return From(l.items[index : index+count]), nil
 }
 
 func (l *List[T]) Add(value T) error {
@@ -79,7 +78,7 @@ func (l *List[T]) Set(index int, value T) error {
 	return nil
 }
 
-func (l *List[T]) AddRange(collection Collections.IEnumerable[T]) error {
+func (l *List[T]) AddRange(collection enumerate.Enumerable[T]) error {
 	enumerator := collection.GetEnumerator()
 	for {
 		l.items = append(l.items, enumerator.Current())

@@ -11,7 +11,7 @@ var QueueEmptyExcepition = errors.New("Queue is empty")
 
 // Queue is a first-in, first-out collection of objects.
 type Queue[T comparable] struct {
-	Collections.ICollection[T]
+	Collections.Collection[T]
 	items    []T
 	syncRoot *sync.Mutex
 }
@@ -22,12 +22,6 @@ func New[T comparable]() *Queue[T] {
 		items:    make([]T, 0),
 		syncRoot: &sync.Mutex{},
 	}
-}
-
-// GetEnumerator returns an enumerator that iterates through the List[T]
-func (q *Queue[T]) GetEnumerator() Collections.IEnumerator[T] {
-	return Collections.Enumerator(q.items)
-
 }
 
 // SyncRoot is inherited from ICollection

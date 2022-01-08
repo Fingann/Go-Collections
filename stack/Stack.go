@@ -10,8 +10,8 @@ import (
 var StackEmptyExcepition = errors.New("Stack is empty")
 
 // Stack is a first-in, first-out collection of objects.
-type Stack[T comparable] struct {
-	Collections.ICollection[T]
+type Stack[T any] struct {
+	Collections.Collection[T]
 	items    []T
 	syncRoot *sync.Mutex
 }
@@ -22,12 +22,6 @@ func New[T comparable]() *Stack[T] {
 		items:    make([]T, 0),
 		syncRoot: &sync.Mutex{},
 	}
-}
-
-// GetEnumerator returns an enumerator that iterates through the Stack[T]
-func (q *Stack[T]) GetEnumerator() Collections.IEnumerator[T] {
-	return Collections.Enumerator(q.items)
-
 }
 
 // SyncRoot is inherited from ICollection
