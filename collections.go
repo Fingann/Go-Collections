@@ -1,13 +1,17 @@
 package collection
 
-import "github.com/Fingann/Go-Collections/enumerate"
+import (
+	"sync"
+
+	"github.com/Fingann/Go-Collections/enumerate"
+)
 
 type Countable[T any] interface {
 	Count() int
 }
 
 type Synchronizable[T any] interface {
-	GetSyncRoot()
+	GetSyncRoot() *sync.Mutex
 }
 
 type Readable[T any] interface {
