@@ -15,7 +15,6 @@ var KeyNotFoundException = errors.New("Key does not exists in the Dictionary")
 // Dictionary represents a map of key-value pairs.
 type Dictionary[TKey comparable, TValue any] struct {
 	IDictionary[TKey, TValue]
-	enumerate.Enumerable[KeyValuePair[TKey, TValue]]
 	dict     map[TKey]TValue
 	syncRoot *sync.Mutex
 }
@@ -36,7 +35,7 @@ func New[TKey comparable, TValue any]() *Dictionary[TKey, TValue] {
 }
 
 // GetEnumerator returns an enumerator that iterates through the List[T]
-func (d *Dictionary[TKey, TValue]) GetEnumerable() *enumerate.Enumerator[KeyValuePair[TKey, TValue]] {
+func (d *Dictionary[TKey, TValue]) GetEnumerable() enumerate.Enumerator[KeyValuePair[TKey, TValue]] {
 	list := make([]KeyValuePair[TKey, TValue], 0, len(d.dict))
 	for key, value := range d.dict {
 		list = append(list, KeyValuePair[TKey, TValue]{key, value})

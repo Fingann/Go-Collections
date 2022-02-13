@@ -78,7 +78,7 @@ func main() {
 	dict.AddKeyValue("key1", NewPoint(1, 2))
 	dict.AddKeyValue("key2", NewPoint(3, 4))
 
-	point1, _ := dict.Get("k5ey1")
+	point1, _ := dict.Get("key1")
 	fmt.Println("Dictionary Get: ", point1) // (1, 2)
 
 	point2, _ := dict.Get("key2")

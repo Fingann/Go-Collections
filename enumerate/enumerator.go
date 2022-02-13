@@ -9,6 +9,6 @@ type IEnumerator[T any] interface {
 	MoveNext() bool
 }
 
-func NewEnumertor[T any](enumerator IEnumerator[T]) *Enumerator[T] {
-	return &Enumerator[T]{enumerator}
+func NewEnumertor[T any](enumerator IEnumerator[T]) Enumerator[T] {
+	return Enumerator[T]{IEnumerator: enumerator}
 }
