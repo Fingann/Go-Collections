@@ -33,6 +33,9 @@ func New[TKey comparable, TValue any]() *Dictionary[TKey, TValue] {
 		syncRoot: &sync.Mutex{},
 	}
 }
+func (d *Dictionary[TKey, TValue]) GetSyncRoot() *sync.Mutex {
+	return d.syncRoot
+}
 
 // GetEnumerator returns an enumerator that iterates through the List[T]
 func (d *Dictionary[TKey, TValue]) GetEnumerable() enumerate.Enumerator[KeyValuePair[TKey, TValue]] {

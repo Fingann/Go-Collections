@@ -37,6 +37,10 @@ func WithLengthCapacity[T any](length int, capacity int) *List[T] {
 	}
 }
 
+func (l *List[T]) GetSyncRoot() *sync.Mutex {
+	return l.syncRoot
+}
+
 // GetEnumerable returns an enumerator that iterates through the List[T]
 func (l *List[T]) GetEnumerable() enumerate.Enumerator[T] {
 	return enumerate.NewEnumertor(enumerate.SliceEnumerator(l.items))

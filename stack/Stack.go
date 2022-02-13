@@ -30,16 +30,6 @@ func (q *Stack[T]) SyncRoot() *sync.Mutex {
 
 }
 
-// Contains determines whether an element is in the Stack.
-func (q *Stack[T]) Contains(value T) bool {
-	for _, s := range q.items {
-		if s == value {
-			return true
-		}
-	}
-	return false
-}
-
 // Pop removes and returns the object at the top of the Stack.
 func (q *Stack[T]) Pop() (T, error) {
 	if len(q.items) <= 0 {

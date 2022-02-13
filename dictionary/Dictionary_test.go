@@ -31,17 +31,6 @@ func TestFrom(t *testing.T) {
 	VerifyEntry(t, d, "key", 1)
 }
 
-func TestGetEnumerable(t *testing.T) {
-	d := From(map[string]int{
-		"key": 1,
-	})
-
-	enumerable := d.GetEnumerable()
-	if enumerable == nil {
-		t.Errorf("Expected GetEnumerable() to return an enumerable, but got nil instead")
-	}
-}
-
 func TestGetSyncRoot(t *testing.T) {
 	d := From(map[string]int{
 		"key": 1,

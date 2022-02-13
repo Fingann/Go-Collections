@@ -5,7 +5,7 @@ type Enumerator[T any] struct {
 }
 type IEnumerator[T any] interface {
 	Current() T
-	Resert()
+	Reset()
 	MoveNext() bool
 }
 
