@@ -11,17 +11,21 @@ import (
 
 var _ enumerate.Enumerable[string] = New[string]()
 
-var IndexOutOfRangeException = errors.New("Index was out of range")
+var ErrIndexOutOfRange = errors.New("index was out of range")
+var ErrItemNotFound = errors.New("item not found")
 
 type List[T any] struct {
 	IList[T]
+	enumerate.IEnumerator[T]
 	items    []T
 	syncRoot *sync.Mutex
 }
 
-func From[T any](list []T) *List[T] {
+
+func From[T any](list ...T) *List[T] {
 	return &List[T]{
 		items:    list,
+		IEnumerator: enumerate.NewSliceEnumerator(list),
 		syncRoot: &sync.Mutex{},
 	}
 }
@@ -31,9 +35,11 @@ func New[T any]() *List[T] {
 }
 
 func WithLengthCapacity[T any](length int, capacity int) *List[T] {
+	items:= make([]T, length, capacity)
 	return &List[T]{
-		items:    make([]T, length, capacity),
+		items:    items,
 		syncRoot: &sync.Mutex{},
+		IEnumerator: enumerate.NewSliceEnumerator(items),
 	}
 }
 
@@ -43,7 +49,7 @@ func (l *List[T]) GetSyncRoot() *sync.Mutex {
 
 // GetEnumerable returns an enumerator that iterates through the List[T]
 func (l *List[T]) GetEnumerable() enumerate.Enumerator[T] {
-	return enumerate.NewEnumertor(enumerate.SliceEnumerator(l.items))
+	return enumerate.NewEnumertor(enumerate.NewSliceEnumerator(l.items))
 
 }
 
@@ -57,7 +63,7 @@ func (l *List[T]) IsReadOnly() bool {
 }
 func (l *List[T]) Get(index int) (T, error) {
 	if index < 0 || index >= len(l.items) {
-		return *new(T), IndexOutOfRangeException
+		return *new(T), ErrIndexOutOfRange
 	}
 
 	return l.items[index], nil
@@ -65,26 +71,26 @@ func (l *List[T]) Get(index int) (T, error) {
 
 func (l *List[T]) GetRange(index int, count int) (*List[T], error) {
 	if index < 0 || index+count >= len(l.items) {
-		return new(List[T]), IndexOutOfRangeException
+		return new(List[T]), ErrIndexOutOfRange
 	}
 
-	return From(l.items[index : index+count]), nil
+	return From(l.items[index : index+count]...), nil
 }
 
-func (l *List[T]) Add(value T) error {
+func (l *List[T]) Add(value T) *List[T] {
 	l.items = append(l.items, value)
-	return nil
+	return l
 }
 
 func (l *List[T]) Set(index int, value T) error {
 	if index < 0 && index >= len(l.items) {
-		return IndexOutOfRangeException
+		return ErrIndexOutOfRange
 	}
 	l.items[index] = value
 	return nil
 }
 
-func (l *List[T]) AddRange(collection enumerate.Enumerable[T]) error {
+func (l *List[T]) AddRange(collection enumerate.Enumerable[T]) *List[T] {
 	enumerator := collection.GetEnumerable()
 	for {
 		l.items = append(l.items, enumerator.Current())
@@ -92,7 +98,7 @@ func (l *List[T]) AddRange(collection enumerate.Enumerable[T]) error {
 			break
 		}
 	}
-	return nil
+	return l
 }
 
 func (l *List[T]) Clear() error {
@@ -113,17 +119,21 @@ func (l *List[T]) IndexOf(value T) (int, error) {
 			return i, nil
 		}
 	}
-	return -1, errors.New("Value is not in index")
+	return -1, ErrItemNotFound
 
 }
+
+// Insert inserts an item at the specified index.
 func (l *List[T]) Insert(index int, value T) error {
 	if index < 0 || index >= len(l.items) {
-		return IndexOutOfRangeException
+		return ErrIndexOutOfRange
 	}
 	l.items[index] = value
 	return nil
 
 }
+
+// Remove removes the first occurrence of a specific object from the List[T].
 func (l *List[T]) Remove(value T) error {
 	index, err := l.IndexOf(value)
 	if err != nil {
@@ -133,12 +143,14 @@ func (l *List[T]) Remove(value T) error {
 
 }
 
+// RemoveAt removes the element at the specified index of the List[T].
 func (l *List[T]) RemoveAt(index int) error {
 	l.items = append(l.items[:index], l.items[index+1:]...)
 	return nil
 
 }
 
+//Find returns the first element in the list that satisfies the predicate.
 func (l *List[T]) Find(predicate internal.Predicate[T]) (T, error) {
 	for _, v := range l.items {
 		if predicate(v) {
@@ -146,14 +158,14 @@ func (l *List[T]) Find(predicate internal.Predicate[T]) (T, error) {
 		}
 	}
 
-	return *new(T), errors.New("Could not find item in collection")
+	return *new(T), errors.New("could not find item in collection")
 }
 
-func (l *List[T]) FindAll(predicate internal.Predicate[T]) []T {
-	items := make([]T, 0)
+func (l *List[T]) FindAll(predicate internal.Predicate[T]) *List[T] {
+	items := New[T]()
 	for _, v := range l.items {
 		if predicate(v) {
-			items = append(items, v)
+			items.Add(v)
 		}
 	}
 	return items
@@ -168,4 +180,8 @@ func (l *List[T]) ForEach(action internal.Action[T]) error {
 
 func (l *List[T]) Count() int {
 	return len(l.items)
+}
+
+func (l *List[T]) ToSlice() []T {
+	return l.items
 }

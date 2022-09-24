@@ -57,3 +57,7 @@ func (q *Stack[T]) Peek() (T, error) {
 func (l *Stack[T]) Count() int {
 	return len(l.items)
 }
+
+func (l *Stack[T]) ToSlice() []T {
+	return l.items
+}

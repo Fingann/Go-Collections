@@ -51,8 +51,9 @@ func (q *Queue[T]) Dequeue() (T, error) {
 }
 
 // Enqueue adds an object to the end of the Queue.
-func (q *Queue[T]) Enqueue(item T) {
+func (q *Queue[T]) Enqueue(item T) *Queue[T] {
 	q.items = append(q.items, item)
+	return q
 }
 
 // Peek returns the object at the beginning of the Queue without removing it.
@@ -66,4 +67,8 @@ func (q *Queue[T]) Peek() (T, error) {
 // Count returns the number of elements in the Queue.
 func (l *Queue[T]) Count() int {
 	return len(l.items)
+}
+
+func (q *Queue[T]) ToSlice() []T {
+	return q.items
 }

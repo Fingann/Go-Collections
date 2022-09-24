@@ -1,25 +1,25 @@
 package enumerate
 
-func SliceEnumerator[T any](collection []T) IEnumerator[T] {
-	return &sliceEnumerator[T]{
-		list:    collection,
+func NewSliceEnumerator[T any](items []T) IEnumerator[T] {
+	return &SliceEnumerator[T]{
+		list:    items,
 		current: 0,
 	}
 }
 
-type sliceEnumerator[T any] struct {
+type SliceEnumerator[T any] struct {
 	Enumerator[T]
 	list    []T
 	current int
 }
 
-func (le *sliceEnumerator[T]) Current() T {
+func (le *SliceEnumerator[T]) Current() T {
 	return le.list[le.current]
 }
-func (le *sliceEnumerator[T]) Reset() {
+func (le *SliceEnumerator[T]) Reset() {
 	le.current = 0
 }
-func (le *sliceEnumerator[T]) MoveNext() bool {
+func (le *SliceEnumerator[T]) MoveNext() bool {
 	le.current = le.current + 1
 	return le.current < len(le.list)
 }

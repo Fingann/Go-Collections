@@ -6,7 +6,7 @@ import (
 
 func TestSliceEnumerator(t *testing.T) {
 	list := []string{"a", "b", "c"}
-	enumerator := SliceEnumerator(list)
+	enumerator := NewSliceEnumerator(list)
 	if enumerator.Current() != "a" {
 		t.Errorf("Expected Current() to return 'a', but got %v instead", enumerator.Current())
 	}

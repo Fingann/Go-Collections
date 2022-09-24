@@ -35,4 +35,5 @@ type Collection[T any] interface {
 	enumerate.Enumerable[T]
 	Synchronizable[T]
 	ReadWriteable[T]
+	ToSlice() []T
 }

@@ -13,70 +13,74 @@ type Point struct {
 	Y int
 }
 
-func NewPoint(x, y int) *Point {
-	return &Point{X: x, Y: y}
+func NewPoint(x, y int) Point {
+	return Point{X: x, Y: y}
 }
 
-func (p *Point) String() string {
-	return fmt.Sprintf("(%d, %d)", p.X, p.Y)
+func PrintItem[T any](item T) error {
+	fmt.Println(item)
+	return nil
 }
 
 func main() {
-	list.From([]*Point{NewPoint(1, 2), NewPoint(3, 4), NewPoint(5, 6)}).
-		ForEach(func(p *Point) {
-			fmt.Println(p)
-		})
+	// Some Errors are returned, but they are not handled here.
+	// This is just a demo.
 
-	fmt.Println("Lists: ")
+	list.From(NewPoint(1, 2), NewPoint(3, 4), NewPoint(5, 6)).
+		ForEach(PrintItem[Point])
 
+	/// Lists
+
+	slice := []string{"hello", " ", "world"}
 	// Create a new List and retrieve values
-	list1 := list.From([]string{"hello,"})
-	list1.Add(" world")
+	list1 := list.From(slice...).Add("!")
+	// Get by index
 	val, _ := list1.Get(0)
-	fmt.Print(val) // "hello,"
-	val, _ = list1.Get(1)
-	fmt.Println(val) // " lists"
+	fmt.Println(val) // "hello"
 
-	// Create a new List
-	list2 := list.New[string]()
-	list2.Add("!")
+	// Add range takes an enumerable so a any collection can be usedworld
+	list1.AddRange(list.New[string]().Add("!").Add("!"))
+	list1.FindAll(func(object string) bool {
+		return object == "!"
+	}).Count() // 2
 
-	// Add list2 to list 1
-	list1.AddRange(list2)
-	fmt.Println("Added secound list to first list")
+	// ForEach lets us loop the list and perform an action on each item
+	list1.ForEach(func(item string) error {
+		fmt.Print(item)
+		return nil // return an error to stop the loop
+	}) // "Hello Collections!!!"
 
-	fmt.Println("Looping and printing list using foreach:")
-	// loop the list and print the values
-	list1.ForEach(func(item string) { fmt.Printf(item) }) // "Hello, lists!"
+	list1.GetEnumerable().
+		Where(func(item string) bool { return item == "Hello" }).
+		ForEach(PrintItem[string]) // "Hello", returns an error if the action returns an error
 
-	fmt.Println("\nSearching List for \"Hello,\"")
 	// Search for values within lists using predicate
 	item, _ := list1.Find(func(needle string) bool {
-		return needle == "hello,"
+		return needle == "hello"
 	})
 	fmt.Printf("Found string: \"%s\"\n", item)
 
-	///////// Queue ////////////
-	fmt.Println("\nQueue:")
+	/// Queue
 
-	queue := queue.New[string]()
-	queue.Enqueue("hello")
-	queue.Enqueue("queue")
+	queue := queue.New[string]().
+		Enqueue("hello").
+		Enqueue("queue")
 
+	queue.Contains("hello") // true
+	queue.Count()           // 2
 	front, _ := queue.Peek()
 	fmt.Printf("Queue Peek: %s\n", front) // "hello"
 
 	val, _ = queue.Dequeue()
 	fmt.Println("Queue Dequeue: ", val) // "hello"
-	val, _ = queue.Dequeue()
-	fmt.Println("Queue Dequeue: ", val) // "queue"
 
-	///////// Dictionary ////////////
+	/// Dictionary
 
-	fmt.Println("\nDictionary:")
-	dict := dictionary.New[string, *Point]()
+	dict := dictionary.New[string, Point]()
 	dict.AddKeyValue("key1", NewPoint(1, 2))
 	dict.AddKeyValue("key2", NewPoint(3, 4))
+
+	dict.ContainsKey("key1") // true
 
 	point1, _ := dict.Get("key1")
 	fmt.Println("Dictionary Get: ", point1) // (1, 2)
