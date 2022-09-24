@@ -16,7 +16,6 @@ var ErrItemNotFound = errors.New("item not found")
 
 type List[T any] struct {
 	IList[T]
-	enumerate.IEnumerator[T]
 	items    []T
 	syncRoot *sync.Mutex
 }
@@ -25,7 +24,6 @@ type List[T any] struct {
 func From[T any](list ...T) *List[T] {
 	return &List[T]{
 		items:    list,
-		IEnumerator: enumerate.NewSliceEnumerator(list),
 		syncRoot: &sync.Mutex{},
 	}
 }
@@ -39,7 +37,6 @@ func WithLengthCapacity[T any](length int, capacity int) *List[T] {
 	return &List[T]{
 		items:    items,
 		syncRoot: &sync.Mutex{},
-		IEnumerator: enumerate.NewSliceEnumerator(items),
 	}
 }
 
@@ -48,7 +45,7 @@ func (l *List[T]) GetSyncRoot() *sync.Mutex {
 }
 
 // GetEnumerable returns an enumerator that iterates through the List[T]
-func (l *List[T]) GetEnumerable() enumerate.Enumerator[T] {
+func (l *List[T]) GetEnumerator() enumerate.Enumerator[T] {
 	return enumerate.NewEnumertor(enumerate.NewSliceEnumerator(l.items))
 
 }
@@ -68,7 +65,13 @@ func (l *List[T]) Get(index int) (T, error) {
 
 	return l.items[index], nil
 }
+func (l *List[T]) GetIndex(index int) (T, error) {
+	if index < 0 || index >= len(l.items) {
+		return *new(T), ErrIndexOutOfRange
+	}
 
+	return l.items[index], nil
+}
 func (l *List[T]) GetRange(index int, count int) (*List[T], error) {
 	if index < 0 || index+count >= len(l.items) {
 		return new(List[T]), ErrIndexOutOfRange
@@ -91,7 +94,7 @@ func (l *List[T]) Set(index int, value T) error {
 }
 
 func (l *List[T]) AddRange(collection enumerate.Enumerable[T]) *List[T] {
-	enumerator := collection.GetEnumerable()
+	enumerator := collection.GetEnumerator()
 	for {
 		l.items = append(l.items, enumerator.Current())
 		if !enumerator.MoveNext() {

@@ -43,6 +43,7 @@ func main() {
 	list1.FindAll(func(object string) bool {
 		return object == "!"
 	}).Count() // 2
+	
 
 	// ForEach lets us loop the list and perform an action on each item
 	list1.ForEach(func(item string) error {
@@ -50,7 +51,7 @@ func main() {
 		return nil // return an error to stop the loop
 	}) // "Hello Collections!!!"
 
-	list1.GetEnumerable().
+	list1.GetEnumerator().
 		Where(func(item string) bool { return item == "Hello" }).
 		ForEach(PrintItem[string]) // "Hello", returns an error if the action returns an error
 

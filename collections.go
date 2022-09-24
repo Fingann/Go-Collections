@@ -1,8 +1,6 @@
 package collection
 
 import (
-	"sync"
-
 	"github.com/Fingann/Go-Collections/enumerate"
 )
 
@@ -10,12 +8,10 @@ type Countable[T any] interface {
 	Count() int
 }
 
-type Synchronizable[T any] interface {
-	GetSyncRoot() *sync.Mutex
-}
+
 
 type Readable[T any] interface {
-	Get(index int) (T, error)
+	Get(item T) (T, error)
 	Contains(value T) bool
 }
 
@@ -31,9 +27,7 @@ type ReadWriteable[T any] interface {
 }
 
 type Collection[T any] interface {
-	Countable[T]
 	enumerate.Enumerable[T]
-	Synchronizable[T]
 	ReadWriteable[T]
 	ToSlice() []T
 }

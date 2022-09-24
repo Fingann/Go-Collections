@@ -12,11 +12,9 @@ import (
 var ErrKeyExists = errors.New("element with the same key already exists in the Dictionary")
 var ErrKeyNotFound = errors.New("key does not exists in the Dictionary")
 
-//var _ IDictionary[string, string] = Dictionary[string,string]{}
 
 // Dictionary represents a map of key-value pairs.
 type Dictionary[TKey comparable, TValue any] struct {
-	IDictionary[TKey, TValue]
 	dict     map[TKey]TValue
 	syncRoot *sync.Mutex
 }
@@ -65,6 +63,22 @@ func (d *Dictionary[TKey, TValue]) Add(pair KeyValuePair[TKey, TValue]) error {
 	return nil
 }
 
+// Add adds a key-value pair to the Dictionary[TKey, TValue].
+func (d *Dictionary[TKey, TValue]) Contains(pair KeyValuePair[TKey, TValue]) bool {
+	_, ok := d.dict[pair.Key()]
+	return ok
+}
+
+// Clear removes all key-value pairs from the Dictionary[TKey, TValue].
+func (d *Dictionary[TKey, TValue]) Clear() error {
+	d.dict = make(map[TKey]TValue)
+	return nil
+}
+
+// Add adds a key-value pair to the Dictionary[TKey, TValue].
+func (d *Dictionary[TKey, TValue]) Count() int {
+	return len(d.dict)
+}
 // AddKeyValue adds a key-value pair to the Dictionary[TKey, TValue].
 func (d *Dictionary[TKey, TValue]) AddKeyValue(key TKey, value TValue) error {
 	_, ok := d.dict[key]
